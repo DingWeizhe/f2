@@ -1,34 +1,30 @@
-# F2: a canvas library which providing 2d draw for mobile
-
-[![npm package](https://img.shields.io/npm/v/@antv/f2.svg)](https://www.npmjs.com/package/@antv/f2)
-[![NPM downloads](http://img.shields.io/npm/dm/@antv/f2.svg)](https://npmjs.org/package/@antv/f2)
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/antvis/f2.svg)](http://isitmaintained.com/project/antvis/f2 "Percentage of issues still open")
+# N2: a canvas library which providing 2d draw for node.js
 
 ## Installing
 
 ```
-npm install @antv/f2
+npm install f2-nodejs
 
 ```
 
 ## 简介
 
-F2 是面向移动端的一套基于可视化图形语法的图表库，具有精简、高性能、易扩展的特性。适用于对性能、大小、扩展性要求很高的场景。[站点](https://antv.alipay.com/zh-cn/f2/3.x/index.html)
+本版本是基於 @antvis/F2 fork 出來，針對 [node-canvas](https://github.com/Automattic/node-canvas) 提供的後端圖表解決方案
 
 ## API
 
 ### Chart
 
-* id: 指定对应 canvas 的id
-* el: 如果未指定 id 时可以直接传入 canvas 对象
+* el: 传入 node-canvas canvas 对象
 * width：图表的宽度，如果 canvas 上设置了宽度，可以不传入
 * height：图表的高度，如果 canvas 上设置了高度，可以不传入
 * pixelRatio：画布的像素比，默认读取 Global 上的pixelRatio
 * padding: 绘图区域（坐标轴包围的区域）跟画布边缘的边距，可以是数字或者数组[top, right, bottom, left]
 
 ```js
+var canvas = createCanvas(200, 200);
 var chart = new F2.Chart({
-  id: 'c1',
+  el: canvasInstance,
   width: 500,
   height: 500,
   padding: [20,10, 50, 40]
@@ -119,7 +115,7 @@ chart.destroy();
   });
   ```
   
-* guide() 创建辅助元素，详情查看 [辅助元素](#guide)
+* guide() 目前不支援 guide 
 * coord(type, cfg)
   + type 坐标系类型，目前支持 rect,polar 两种
   + cfg 坐标系的配置项，rect（直角坐标系） 和 polar(极坐标）的配置项不完全一样
@@ -154,24 +150,8 @@ chart.destroy();
   + polygon 多边形
   + schema 蜡烛图等特殊的图表
   
-* animate(cfg|false) 执行动画
-  * cfg|false 指定动画的配置项或者禁用动画
-    + type: 动画的类型：
-    + duration: 动画时间（毫秒），默认1000。
-    + easing: Function/String 缓动函数或缓动函数名称，默认easeInOut。支持linear、easeIn、easeOut、easeInOut、backIn、backOut、elastic、bounce
-    + success: Function 动画结束后执行的回调函数。
+* animate 目前不支援動畫
 
-  ```js
-    chart.animate(false);// 禁用动画
-  chart.animate({
-    duration: 2000,
-    easing: 'elastic',
-    success: function() {
-    alert('ok');
-    }
-  });
-  ```
-  
 * getPosition(record) 获取数据对应在画布上的坐标。
 
   ```js
@@ -253,8 +233,6 @@ chart.destroy();
   
 * adjust(type) 进行数据调整
   + F2 目前仅支持 stack（层叠） 和 dodge(分组）的数据调整
-
-### guide
 
 ### F2.Shape 自定义shape
 
