@@ -63,6 +63,7 @@
     "silent": false
   },
   "dependencies": {
+    "canvas": "^2.0.0-alpha.6",
     "fecha": "^2.3.1"
   }
 }

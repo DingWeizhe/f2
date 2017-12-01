@@ -12,8 +12,6 @@ const ScaleAssist = require('./assist/scale');
 const AxisAssist = require('./assist/axis');
 const GuideAssist = require('./assist/guide');
 const Global = require('../global');
-const DomUtil = require('../dom-util');
-const AnimateAssist = require('./assist/animate');
 
 function isFullCircle(coord) {
   const startAngle = coord.startAngle;
@@ -247,7 +245,6 @@ class Chart extends Base {
       canvas: self.get('canvas')
     }));
     self.set('guideAssist', new GuideAssist());
-    self.set('animateAssist', new AnimateAssist());
     self._initData(self.get('data'));
   }
 
@@ -263,55 +260,25 @@ class Chart extends Base {
     }
   }
 
-  _getRatio() {
-    return this.get('pixelRatio');
-  }
-
   // 初始化画布
   _initCanvas() {
     const self = this;
-    const id = self.get('id');
     const el = self.get('el');
     const context = self.get('context');
-    let canvas;
-    if (el) {
-      canvas = el;
-    } else {
-      canvas = document.getElementById(id);
-      if (!canvas) {
-        throw new Error('Please specify the id or el of the chart!');
-      }
+    const canvas = el;
+
+    if (!canvas) {
+      throw new Error('Please specify the el of the chart!');
     }
+
     self.set('canvas', canvas);
     if (context && canvas && !canvas.getContext) {
       canvas.getContext = function() {
         return context;
       };
     }
-    let width = self.get('width');
-    let height = self.get('height');
-    const ratio = self._getRatio();
-    if (!width) {
-      width = DomUtil.getWidth(canvas);
-      self.set('width', width);
-    }
-
-    if (!height) {
-      height = DomUtil.getHeight(canvas);
-      self.set('height', height);
-    }
-
-    if (ratio) {
-      canvas.width = width * ratio;
-      canvas.height = height * ratio;
-      DomUtil.modiCSS(canvas, { height: height + 'px' });
-      DomUtil.modiCSS(canvas, { width: width + 'px' });
-      if (ratio !== 1) {
-        const ctx = canvas.getContext('2d');
-        ctx.scale(ratio, ratio);
-      }
-    }
-
+    self.set('width', canvas.width);
+    self.set('height', canvas.height);
     self._initLayout();
   }
 
@@ -421,7 +388,6 @@ class Chart extends Base {
   }
 
   _clearInner() {
-    this.get('animateAssist').stop();
     this.set('scales', {});
     this._clearGeoms();
     this._clearCanvas();
@@ -471,37 +437,6 @@ class Chart extends Base {
     }
   }
 
-  _renderAnimate(callback) {
-    const self = this;
-    const imageData = self.get('imageData');
-    const bgImageData = self.get('bgImageData');
-    const animateAssist = self.get('animateAssist');
-    const canvas = self.get('canvas');
-    const coord = self.get('coord');
-    const center = coord.get('center');
-    const radius = coord.get('radius');
-    const geom = self.get('geoms')[0];
-    const yScale = geom.getYScale();
-    const yMin = geom.getYMinValue();
-
-    const startPoint = coord.convertPoint({
-      x: 0,
-      y: yScale.scale(yMin)
-    });
-
-    if (animateAssist.animate) {
-      animateAssist.setOptions({
-        imageData,
-        bgImageData,
-        startPoint,
-        center,
-        radius
-      });
-      animateAssist.setCallBack(callback);
-      animateAssist.paint(canvas);
-    }
-  }
-
   /**
    * 图表绘制
    * @chainable
@@ -511,22 +446,11 @@ class Chart extends Base {
     const self = this;
     self._initCoord();
     const geoms = self.get('geoms');
-    const animateAssist = self.get('animateAssist');
     self._initGeoms(geoms);
     this._adjustScale();
     self.beforeDrawGeom();
-
-    if (animateAssist.animate) {
-      self.set('bgImageData', self.getImageData());
-      self._clearCanvas();
-      self.drawGeom(geoms);
-      self.set('imageData', self.getImageData());
-      self._clearCanvas();
-      self._renderAnimate(self._renderFrontGuide.bind(self));
-    } else {
-      self.drawGeom(geoms);
-      self._renderFrontGuide();
-    }
+    self.drawGeom(geoms);
+    self._renderFrontGuide();
     return self;
   }
 
@@ -560,8 +484,7 @@ class Chart extends Base {
     const ctx = canvas.getContext('2d');
     const width = self.get('width');
     const height = self.get('height');
-    const ratio = self._getRatio();
-    return ctx.getImageData(0, 0, width * ratio, height * ratio);
+    return ctx.getImageData(0, 0, width, height);
   }
 
   _initGeoms(geoms) {
@@ -660,10 +583,9 @@ class Chart extends Base {
     return this.get('guideAssist');
   }
 
-  animate(cfg) {
-    const animateAssist = this.get('animateAssist');
-    animateAssist.setAnimate(cfg);
-    return self;
+  animate() {
+    console.log("nodejs version f2 don't support animate");
+    return this;
   }
 }
 

@@ -9,7 +9,6 @@ const Guide = require('./guide');
 Guide.Text = require('./text');
 Guide.Line = require('./line');
 Guide.Arc = require('./arc');
-Guide.Html = require('./html');
 Guide.Rect = require('./rect');
 
 const GuideAssist = require('../chart/assist/guide');
@@ -91,17 +90,8 @@ Util.mix(GuideAssist.prototype, {
    * @param  {Object} cfg  配置项
    * @return {Object} guideAssist 对象
    */
-  html(position, html, cfg) {
-    const config = {
-      type: 'html',
-      position,
-      html,
-      cfg: Util.mix({}, cfg)
-    };
-
-    Util.mix(config, this._getDefault());
-    const guide = new Guide.Html(config);
-    this.addGuide(guide);
+  html() {
+    console.log("nodejs version f2 don't support html type guide");
     return this;
   },
 

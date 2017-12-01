@@ -81,17 +81,6 @@ describe('guide assist', function() {
     assist.text(position, text, cfg);
     assist.paint(coord, canvas);
   });
-  it('assist method:html(poinf,html,cfg)', function() {
-    const point = [ '一月', 200 ];
-    const cfg = {
-      align: 'tc'
-    };
-    const assist = new GuideAssist({});
-    const html = '<button>a</button>';
-    assist.setScale(xScale, yScale);
-    assist.html(point, html, cfg);
-    assist.paint(coord, canvas);
-  });
   it('assist method:rect(start,end,cfg)', function() {
     const start = [ '一月', 200 ];
     const end = [ '二月', 400 ];
