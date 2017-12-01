@@ -1,5 +1,5 @@
 {
-  "name": "@antv/f2",
+  "name": "f2-nodejs",
   "version": "3.0.0",
   "description": "A canvas library which providing 2d draw for G2.",
   "keywords": [
